@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poova Life Desk – Life records in one desk</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple:#6B3FA0;--purple2:#8B5CC8;--purple-light:#EDE7F6;
+  --pink:#E91E8C;--pink2:#F06292;--pink-light:#FCE4EC;
+  --lavender:#F3EEFF;--white:#FFFFFF;
+  --text:#2D1B69;--muted:#8B7BA8;--border:#D8C8F0;
+  --success:#4CAF50;--pending:#FF9800;--completed:#2196F3;
+  --shadow:0 4px 24px rgba(107,63,160,.12);
+  --shadow2:0 8px 40px rgba(107,63,160,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--lavender);color:var(--text);min-height:100vh}
+
+/* ── LOGO SVG ── */
+.logo-svg{width:38px;height:38px;flex-shrink:0}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(135deg,var(--purple) 0%,var(--purple2) 60%,var(--pink) 100%);
+  color:#fff;height:64px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.5rem;position:sticky;top:0;z-index:100;
+  box-shadow:0 4px 20px rgba(107,63,160,.3)
+}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo-text{line-height:1}
+.logo-text .brand{font-family:'Playfair Display',serif;font-size:1.3rem;letter-spacing:-.01em}
+.logo-text .brand span{color:#F8BBD9}
+.logo-text .tagline{font-size:.65rem;opacity:.85;letter-spacing:.04em;margin-top:1px}
+header nav{display:flex;gap:6px;align-items:center}
+.nav-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;
+  padding:6px 14px;border-radius:20px;cursor:pointer;font-family:'Nunito',sans-serif;
+  font-size:.78rem;font-weight:600;transition:all .2s;letter-spacing:.02em}
+.nav-btn:hover{background:rgba(255,255,255,.25)}
+.nav-btn.active-tab{background:#fff;color:var(--purple)}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.25);
+  border:2px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 64px)}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  background:linear-gradient(180deg,var(--purple) 0%,#4A2880 100%);
+  padding:1.2rem .75rem;display:flex;flex-direction:column;gap:.3rem
+}
+.sb-group-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;
+  color:rgba(255,255,255,.4);padding:0 10px;margin:1rem 0 .3rem}
+.sb-item{
+  display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:10px;
+  cursor:pointer;transition:all .2s;color:rgba(255,255,255,.7);
+  font-size:.84rem;font-weight:600;border:none;background:transparent;width:100%;text-align:left
+}
+.sb-item:hover{background:rgba(255,255,255,.1);color:#fff}
+.sb-item.active{background:linear-gradient(90deg,rgba(233,30,140,.8),rgba(240,98,146,.6));color:#fff;box-shadow:0 2px 12px rgba(233,30,140,.3)}
+.sb-item .si{width:18px;font-size:1rem;flex-shrink:0}
+.sb-badge{background:var(--pink);color:#fff;font-size:.62rem;font-weight:800;
+  padding:1px 6px;border-radius:10px;margin-left:auto}
+.sb-divider{height:1px;background:rgba(255,255,255,.1);margin:.5rem 0}
+.powered-by{margin-top:auto;padding:12px 10px;background:rgba(255,255,255,.07);
+  border-radius:10px;font-size:.72rem;color:rgba(255,255,255,.6);text-align:center;line-height:1.5}
+.powered-by strong{color:var(--pink2)}
+
+/* ── MAIN ── */
+main{padding:1.5rem;overflow-y:auto}
+
+/* ── VIEWS ── */
+.view{display:none}.view.active{display:block}
+
+/* ── DASHBOARD VIEW ── */
+.dash-welcome{margin-bottom:1.5rem}
+.dash-welcome h2{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--purple);margin-bottom:4px}
+.dash-welcome p{font-size:.85rem;color:var(--muted)}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat-card{
+  background:#fff;border-radius:14px;padding:1.1rem 1.2rem;
+  box-shadow:var(--shadow);position:relative;overflow:hidden
+}
+.stat-card::before{content:'';position:absolute;top:-15px;right:-15px;width:60px;height:60px;
+  border-radius:50%;opacity:.12}
+.stat-card.c1::before{background:var(--purple)}
+.stat-card.c2::before{background:var(--pink)}
+.stat-card.c3::before{background:#FF9800}
+.stat-card.c4::before{background:#4CAF50}
+.stat-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.stat-val{font-size:2rem;font-weight:800;line-height:1}
+.stat-card.c1 .stat-val{color:var(--purple)}
+.stat-card.c2 .stat-val{color:var(--pink)}
+.stat-card.c3 .stat-val{color:#FF9800}
+.stat-card.c4 .stat-val{color:#4CAF50}
+.stat-sub{font-size:.7rem;color:var(--muted);margin-top:4px}
+
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.feat-card{
+  background:#fff;border-radius:14px;padding:1.2rem;text-align:center;
+  box-shadow:var(--shadow);transition:all .25s;cursor:default
+}
+.feat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow2)}
+.feat-icon{width:48px;height:48px;border-radius:12px;margin:0 auto .75rem;
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.feat-icon.f1{background:linear-gradient(135deg,#EDE7F6,#D1C4E9)}
+.feat-icon.f2{background:linear-gradient(135deg,#FCE4EC,#F8BBD9)}
+.feat-icon.f3{background:linear-gradient(135deg,#E8F5E9,#C8E6C9)}
+.feat-icon.f4{background:linear-gradient(135deg,#E3F2FD,#BBDEFB)}
+.feat-icon.f5{background:linear-gradient(135deg,#FFF3E0,#FFE0B2)}
+.feat-icon.f6{background:linear-gradient(135deg,#F3E5F5,#E1BEE7)}
+.feat-name{font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.feat-desc{font-size:.7rem;color:var(--muted)}
+
+.recent-table-wrap{background:#fff;border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.rt-header{padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.rt-title{font-size:.9rem;font-weight:800;color:var(--text)}
+.view-all{font-size:.75rem;color:var(--pink);font-weight:700;cursor:pointer;text-decoration:none}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--lavender);padding:.65rem 1rem;font-size:.72rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left}
+tbody tr{border-bottom:1px solid #f0eaf8;transition:background .15s}
+tbody tr:hover{background:var(--lavender)}
+tbody td{padding:.7rem 1rem;font-size:.82rem;color:var(--text)}
+.status-pill{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:700;
+  padding:3px 10px;border-radius:20px}
+.sp-completed{background:#E8F5E9;color:#2E7D32}
+.sp-pending{background:#FFF3E0;color:#E65100}
+.dept-chip{display:inline-block;background:var(--purple-light);color:var(--purple);
+  font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:8px}
+
+/* ── PATIENTS VIEW ── */
+.page-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.page-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--purple)}
+.search-row{display:flex;gap:.75rem;align-items:center}
+.search-box{display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--border);
+  border-radius:20px;padding:6px 14px;font-family:'Nunito',sans-serif;font-size:.83rem}
+.search-box input{border:none;outline:none;font-family:'Nunito',sans-serif;font-size:.83rem;color:var(--text);width:180px}
+
+.patient-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.patient-card{background:#fff;border-radius:14px;padding:1.1rem;box-shadow:var(--shadow);
+  cursor:pointer;transition:all .2s;border:2px solid transparent}
+.patient-card:hover{border-color:var(--purple);transform:translateY(-2px)}
+.pc-avatar{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--purple-light),#D1C4E9);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:.7rem}
+.pc-name{font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:2px}
+.pc-meta{font-size:.72rem;color:var(--muted);margin-bottom:.6rem}
+.pc-dept{display:inline-block;background:var(--pink-light);color:var(--pink);
+  font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:8px}
+
+/* ── SUMMARY GENERATOR ── */
+.steps-bar{background:#fff;border-radius:12px;padding:.85rem 1.4rem;display:flex;
+  align-items:center;margin-bottom:1.2rem;box-shadow:var(--shadow)}
+.step-item{display:flex;align-items:center;gap:7px;flex:1}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--border);color:var(--muted);
+  font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.step-item.active .step-num{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff}
+.step-item.done .step-num{background:#4CAF50;color:#fff}
+.step-lbl{font-size:.76rem;color:var(--muted);font-weight:700}
+.step-item.active .step-lbl{color:var(--purple)}
+.step-line{height:2px;width:32px;background:var(--border);margin:0 6px;flex-shrink:0}
+
+/* ── CARDS ── */
+.card{background:#fff;border-radius:14px;padding:1.3rem;box-shadow:var(--shadow);margin-bottom:1.1rem}
+.card-hdr{font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.badge{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-size:.63rem;
+  font-weight:800;padding:2px 8px;border-radius:12px;letter-spacing:.04em}
+.badge-opt{background:var(--muted)}
+
+/* FORM */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.fg3{grid-template-columns:1fr 1fr 1fr}
+.field{display:flex;flex-direction:column;gap:4px}
+.field.full{grid-column:1/-1}
+label{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+input,select,textarea{
+  border:1.5px solid var(--border);border-radius:9px;padding:8px 12px;
+  font-family:'Nunito',sans-serif;font-size:.86rem;color:var(--text);
+  background:#FAFAFE;outline:none;transition:border-color .2s;font-weight:600
+}
+input:focus,select:focus,textarea:focus{border-color:var(--purple)}
+textarea{resize:vertical;min-height:70px}
+
+/* DOCTOR SELECTOR */
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.7rem;margin-top:.6rem}
+.doc-card{border:2px solid var(--border);border-radius:11px;padding:10px 12px;cursor:pointer;
+  transition:all .2s;background:#FAFAFE}
+.doc-card:hover{border-color:var(--purple);background:var(--lavender)}
+.doc-card.sel{border-color:var(--pink);background:var(--pink-light);box-shadow:0 2px 12px rgba(233,30,140,.15)}
+.dc-icon{font-size:1.3rem;margin-bottom:4px}
+.dc-name{font-size:.8rem;font-weight:800;color:var(--text)}
+.dc-dept{font-size:.68rem;color:var(--muted);margin-top:1px}
+
+/* UPLOAD */
+.drop-zone{border:2px dashed var(--border);border-radius:12px;padding:1.8rem;text-align:center;
+  cursor:pointer;transition:all .2s;background:#FAFAFE;position:relative}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--purple);background:var(--lavender)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;border:none;padding:0}
+.dz-icon{font-size:2rem;margin-bottom:.5rem}
+.dz-title{font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:3px}
+.dz-sub{font-size:.76rem;color:var(--muted)}
+.dz-hint{margin-top:5px;font-size:.7rem;color:var(--purple);font-weight:700}
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px;margin-top:.8rem}
+.img-thumb{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:3/4;border:2px solid var(--border)}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.rm-btn{position:absolute;top:3px;right:3px;background:rgba(233,30,140,.85);color:#fff;border:none;
+  border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center}
+.pg-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(107,63,160,.75);color:#fff;font-size:.6rem;padding:2px 5px;text-align:center}
+
+/* BUTTONS */
+.btn{padding:9px 22px;border-radius:20px;font-family:'Nunito',sans-serif;font-size:.84rem;font-weight:800;
+  cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px;letter-spacing:.02em}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;box-shadow:0 4px 15px rgba(233,30,140,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(233,30,140,.4)}
+.btn-sec{background:#fff;color:var(--purple);border:2px solid var(--purple)}
+.btn-sec:hover{background:var(--lavender)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:1.1rem}
+
+/* PROCESSING */
+.proc-card{text-align:center;padding:3rem 2rem}
+.pulse-logo{width:72px;height:72px;margin:0 auto 1rem;animation:logoPulse 1.5s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:.8}}
+.proc-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--purple);margin-bottom:.4rem}
+.proc-sub{color:var(--muted);font-size:.84rem}
+.prog-list{margin-top:1.2rem;text-align:left;max-width:270px;margin-left:auto;margin-right:auto}
+.prog-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:.8rem;color:var(--muted);font-weight:600}
+.prog-item.active{color:var(--purple);font-weight:800}
+.prog-item.done{color:#4CAF50}
+.prog-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0}
+.prog-item.active .prog-dot{background:var(--pink);animation:pulse 1s infinite}
+.prog-item.done .prog-dot{background:#4CAF50}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* SUMMARY SECTIONS */
+.sum-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.2rem;gap:1rem}
+.sum-meta h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--purple)}
+.meta-row{display:flex;gap:1rem;margin-top:5px;flex-wrap:wrap}
+.meta-chip{font-size:.72rem;color:var(--muted);display:flex;align-items:center;gap:3px;font-weight:600}
+.dept-badge{display:inline-flex;align-items:center;gap:4px;
+  background:linear-gradient(135deg,var(--purple-light),var(--pink-light));
+  color:var(--purple);border-radius:20px;padding:3px 10px;font-size:.7rem;font-weight:800}
+.sum-actions{display:flex;gap:7px;flex-shrink:0}
+.sum-section{background:var(--lavender);border-radius:10px;padding:.8rem 1rem;margin-bottom:.7rem;
+  border-left:3px solid var(--purple);position:relative}
+.sum-section-ttl{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:5px}
+.sum-section-body{font-size:.84rem;line-height:1.65;color:var(--text);white-space:pre-wrap;font-weight:600}
+.sum-section-body[contenteditable=true]{outline:none;padding:3px;border-radius:4px}
+.sum-section-body[contenteditable=true]:focus{background:rgba(233,30,140,.05)}
+.edit-hint{position:absolute;top:7px;right:9px;font-size:.62rem;color:var(--muted);opacity:0;transition:opacity .2s}
+.sum-section:hover .edit-hint{opacity:1}
+
+/* ALERT */
+.alert{background:var(--lavender);border:1.5px solid var(--border);border-radius:9px;
+  padding:9px 12px;font-size:.78rem;color:var(--purple);display:flex;align-items:flex-start;gap:7px;
+  margin-bottom:.9rem;font-weight:600}
+
+/* REPORTS VIEW */
+.reports-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.report-card{background:#fff;border-radius:14px;padding:1.2rem;box-shadow:var(--shadow)}
+.rc-title{font-size:.85rem;font-weight:800;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+.bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem}
+.bar-label{font-size:.73rem;color:var(--muted);font-weight:700;width:80px;flex-shrink:0}
+.bar-track{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.bar-val{font-size:.72rem;font-weight:800;color:var(--text);width:30px;text-align:right}
+
+/* SETTINGS VIEW */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.setting-card{background:#fff;border-radius:14px;padding:1.2rem;box-shadow:var(--shadow)}
+.sc-title{font-size:.85rem;font-weight:800;color:var(--text);margin-bottom:.9rem;display:flex;align-items:center;gap:6px}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none}
+.tr-label{font-size:.8rem;font-weight:700;color:var(--text)}
+.tr-sub{font-size:.68rem;color:var(--muted)}
+.toggle{position:relative;width:40px;height:22px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:11px;cursor:pointer;transition:.3s}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+.toggle input:checked+.toggle-slider{background:linear-gradient(135deg,var(--purple),var(--pink))}
+.toggle input:checked+.toggle-slider::before{transform:translateX(18px)}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;
+  background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;
+  padding:11px 20px;border-radius:20px;font-size:.83rem;font-weight:700;
+  box-shadow:0 6px 24px rgba(233,30,140,.35);display:flex;align-items:center;gap:7px;
+  transform:translateY(80px);opacity:0;transition:all .3s;z-index:999}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media print{
+  header,.sidebar,.steps-bar,.btn-row,.sum-actions,.badge,.edit-hint,nav,.alert{display:none!important}
+  .layout{grid-template-columns:1fr}
+  main{padding:0}
+  .card{box-shadow:none;border-radius:0}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="logo-wrap">
+    <!-- Poova Life Desk Logo SVG (hand + cross + leaves) -->
+    <svg class="logo-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Hand -->
+      <path d="M20 52 C18 46 16 38 22 34 C26 31 30 33 32 38 L34 44 L42 36 C46 32 52 34 50 40 L44 52 C41 58 36 62 30 62 C25 62 21 58 20 52Z" fill="url(#handGrad)" opacity="0.9"/>
+      <!-- Medical Cross -->
+      <rect x="34" y="14" width="12" height="28" rx="4" fill="url(#crossGrad)"/>
+      <rect x="26" y="22" width="28" height="12" rx="4" fill="url(#crossGrad)"/>
+      <!-- Leaves -->
+      <path d="M18 28 C14 22 10 14 16 10 C20 8 24 12 22 20Z" fill="url(#leafGrad1)" opacity=".85"/>
+      <path d="M26 20 C22 14 20 8 26 6 C30 5 32 10 28 18Z" fill="url(#leafGrad2)" opacity=".8"/>
+      <path d="M60 28 C64 22 68 14 62 10 C58 8 54 12 56 20Z" fill="url(#leafGrad1)" opacity=".6"/>
+      <defs>
+        <linearGradient id="handGrad" x1="16" y1="32" x2="52" y2="64" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#9C6DD8"/>
+          <stop offset="1" stop-color="#7B4FC8"/>
+        </linearGradient>
+        <linearGradient id="crossGrad" x1="26" y1="14" x2="54" y2="42" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#E91E8C"/>
+          <stop offset="1" stop-color="#F06292"/>
+        </linearGradient>
+        <linearGradient id="leafGrad1" x1="10" y1="8" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#E91E8C"/>
+          <stop offset="1" stop-color="#F06292"/>
+        </linearGradient>
+        <linearGradient id="leafGrad2" x1="18" y1="5" x2="30" y2="22" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#C0126A"/>
+          <stop offset="1" stop-color="#E91E8C"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="logo-text">
+      <div class="brand">Poova <span>Life</span> Desk</div>
+      <div class="tagline">Life records in one desk.</div>
+    </div>
+  </div>
+  <nav>
+    <button class="nav-btn active-tab" onclick="switchView('dashboard',this)">Dashboard</button>
+    <button class="nav-btn" onclick="switchView('patients',this)">Patients</button>
+    <button class="nav-btn" onclick="switchView('summaries',this)">Summaries</button>
+    <button class="nav-btn" onclick="switchView('reports',this)">Reports</button>
+    <button class="nav-btn" onclick="switchView('settings',this)">Settings</button>
+    <div class="nav-avatar">👤</div>
+  </nav>
+</header>
+
+<div class="layout">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sb-group-label">Main Menu</div>
+  <button class="sb-item active" onclick="switchView('dashboard',null);setSbActive(this)">
+    <span class="si">📊</span> Dashboard
+  </button>
+  <button class="sb-item" onclick="switchView('patients',null);setSbActive(this)">
+    <span class="si">👥</span> Patients <span class="sb-badge">0</span>
+  </button>
+  <button class="sb-item" onclick="switchView('summaries',null);setSbActive(this)">
+    <span class="si">📋</span> Summaries <span class="sb-badge">0</span>
+  </button>
+  <button class="sb-item" onclick="switchView('departments',null);setSbActive(this)">
+    <span class="si">🏥</span> Departments
+  </button>
+  <button class="sb-item" onclick="switchView('reports',null);setSbActive(this)">
+    <span class="si">📈</span> Reports
+  </button>
+
+  <div class="sb-divider"></div>
+  <div class="sb-group-label">Management</div>
+  <button class="sb-item" onclick="switchView('users',null);setSbActive(this)">
+    <span class="si">👤</span> Users
+  </button>
+  <button class="sb-item" onclick="switchView('settings',null);setSbActive(this)">
+    <span class="si">⚙️</span> Settings
+  </button>
+
+  <div class="powered-by">
+    <div>Powered by</div>
+    <strong>Poovarasan</strong>
+    <div style="margin-top:4px;font-size:.65rem">Smarter Summary.<br>Better Care for Everyone's Life.</div>
+  </div>
+</aside>
+
+<main>
+
+<!-- ════════════════════════════════════════ DASHBOARD ════ -->
+<div class="view active" id="view-dashboard">
+  <div class="dash-welcome">
+    <h2>Good Morning, Doctor 👋</h2>
+    <p>Here's what's happening at Poova Life Desk today.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stat-grid">
+    <div class="stat-card c1">
+      <div class="stat-label">Total Patients</div>
+      <div class="stat-val" id="statTotal">0</div>
+      <div class="stat-sub">Registered patients</div>
+    </div>
+    <div class="stat-card c2">
+      <div class="stat-label">Today's Summary</div>
+      <div class="stat-val" id="statToday">0</div>
+      <div class="stat-sub">Generated today</div>
+    </div>
+    <div class="stat-card c3">
+      <div class="stat-label">Pending</div>
+      <div class="stat-val" id="statPending">0</div>
+      <div class="stat-sub">Needs attention</div>
+    </div>
+    <div class="stat-card c4">
+      <div class="stat-label">Completed</div>
+      <div class="stat-val" id="statCompleted">0</div>
+      <div class="stat-sub">Summaries done</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features-grid">
+    <div class="feat-card" onclick="switchView('summaries',null)">
+      <div class="feat-icon f1">📋</div>
+      <div class="feat-name">Life Records in One Desk</div>
+      <div class="feat-desc">All patient records centralized and organized</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon f2">🛡️</div>
+      <div class="feat-name">Secure & Reliable</div>
+      <div class="feat-desc">HIPAA-compliant data protection</div>
+    </div>
+    <div class="feat-card" onclick="switchView('summaries',null)">
+      <div class="feat-icon f3">🪄</div>
+      <div class="feat-name">Smart Summaries</div>
+      <div class="feat-desc">AI-powered discharge summary generation</div>
+    </div>
+    <div class="feat-card" onclick="switchView('patients',null)">
+      <div class="feat-icon f4">⚡</div>
+      <div class="feat-name">Quick Access & Overview</div>
+      <div class="feat-desc">Instant patient data at your fingertips</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon f5">🤝</div>
+      <div class="feat-name">Better Care Coordination</div>
+      <div class="feat-desc">Seamless multi-department collaboration</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon f6">☁️</div>
+      <div class="feat-name">Safe & Accessible</div>
+      <div class="feat-desc">Access anytime, anywhere securely</div>
+    </div>
+  </div>
+
+  <!-- RECENT SUMMARIES TABLE -->
+  <div class="recent-table-wrap">
+    <div class="rt-header">
+      <div class="rt-title">Recent Summaries</div>
+      <a class="view-all" onclick="switchView('summaries',null)">View All →</a>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Department</th>
+          <th>Summary Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="recentTbody">
+        <tr>
+          <td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);font-size:.85rem;font-weight:600">
+            <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
+            No summaries yet. Generate your first summary to see it here.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ PATIENTS ════ -->
+<div class="view" id="view-patients">
+  <div class="page-hdr">
+    <div class="page-title">Patients</div>
+    <div class="search-row">
+      <div class="search-box">🔍 <input placeholder="Search patient...">
+      </div>
+      <button class="btn btn-primary" onclick="switchView('summaries',null)">+ New Summary</button>
+    </div>
+  </div>
+  <div class="patient-grid" id="patientGrid">
+    <div class="patient-card" onclick="switchView('summaries',null)" style="border:2px dashed var(--border);background:var(--lavender)">
+      <div class="pc-avatar" style="background:linear-gradient(135deg,var(--pink-light),#F8BBD9);font-size:1.6rem">+</div>
+      <div class="pc-name">Add New Patient</div>
+      <div class="pc-meta">Create a new discharge summary</div>
+      <span class="pc-dept" style="background:var(--purple-light);color:var(--purple)">New</span>
+    </div>
+  </div>
+  <div id="noPatients" style="text-align:center;padding:2rem;color:var(--muted);font-size:.85rem;font-weight:600;display:none">
+    No patients yet.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ SUMMARIES ════ -->
+<div class="view" id="view-summaries">
+  <!-- STEPS -->
+  <div class="steps-bar">
+    <div class="step-item active" id="s1"><div class="step-num">1</div><div class="step-lbl">Patient & Doctor</div></div>
+    <div class="step-line"></div>
+    <div class="step-item" id="s2"><div class="step-num">2</div><div class="step-lbl">Upload Case Sheet</div></div>
+    <div class="step-line"></div>
+    <div class="step-item" id="s3"><div class="step-num">3</div><div class="step-lbl">AI Processing</div></div>
+    <div class="step-line"></div>
+    <div class="step-item" id="s4"><div class="step-num">4</div><div class="step-lbl">Summary Ready</div></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="step1" class="step-view">
+    <div class="card">
+      <div class="card-hdr">Patient Information <span class="badge">Required</span></div>
+      <div class="fg">
+        <div class="field"><label>Patient Full Name</label><input id="pName" placeholder="e.g. Kavitha Rajan"></div>
+        <div class="field"><label>MRD No.</label><input id="pMrd" placeholder="e.g. MRD-2024-0123"></div>
+        <div class="field"><label>IP No.</label><input id="pIp" placeholder="e.g. IP-5678"></div>
+        <div class="field"><label>Age</label><input id="pAge" placeholder="e.g. 28 years"></div>
+        <div class="field"><label>Sex</label>
+          <select id="pSex"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+        <div class="field"><label>Room No.</label><input id="pRoom" placeholder="e.g. 204"></div>
+        <div class="field"><label>Date of Admission (D.O.A)</label><input type="date" id="pDoa"></div>
+        <div class="field"><label>Date of Surgery (D.O.S)</label><input type="date" id="pDos"></div>
+        <div class="field"><label>Date of Discharge (D.O.D)</label><input type="date" id="pDod"></div>
+        <div class="field"><label>Referral Doctor</label><input id="pRef" placeholder="e.g. Dr. Suresh, MBBS"></div>
+        <div class="field full"><label>Address</label><textarea id="pAddr" rows="2" placeholder="Patient's address..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">Select Doctor & Department <span class="badge">Required</span></div>
+      <div class="alert">💡 Select the exact doctor — each has their own specific discharge summary format.</div>
+      <div class="doc-grid" id="docGrid">
+        <div class="doc-card sel" onclick="selDoc(this,'DR_CHITHRA_LSCS')"><div class="dc-icon">🤱</div><div class="dc-name">Dr. S. Chithra</div><div class="dc-dept">OB/GYN – LSCS</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_CHITHRA_ECTOPIC')"><div class="dc-icon">🤱</div><div class="dc-name">Dr. S. Chithra</div><div class="dc-dept">OB/GYN – Ectopic</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_CHITHRA_NEW')"><div class="dc-icon">🤱</div><div class="dc-name">Dr. S. Chithra</div><div class="dc-dept">OB/GYN – General</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_ASK_PAED')"><div class="dc-icon">👶</div><div class="dc-name">Dr. A.S. Kumar</div><div class="dc-dept">Paediatrics</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_ASK_NEWBORN')"><div class="dc-icon">🍼</div><div class="dc-name">Dr. A.S. Kumar</div><div class="dc-dept">New Born Baby</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_KMS')"><div class="dc-icon">🦴</div><div class="dc-name">Dr. K. Mohanasundaram</div><div class="dc-dept">Ortho – TKR</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_PREMNATH')"><div class="dc-icon">🦴</div><div class="dc-name">Dr. G. Premnath</div><div class="dc-dept">Orthopaedic Surgery</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_RRP')"><div class="dc-icon">❤️</div><div class="dc-name">Dr. A. Rajaram Prasad</div><div class="dc-dept">Cardiology</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_RAM')"><div class="dc-icon">🫁</div><div class="dc-name">Dr. J. Ram</div><div class="dc-dept">Pulmonology</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_ARUN')"><div class="dc-icon">🩺</div><div class="dc-name">Dr. V.G. Arun</div><div class="dc-dept">General Medicine</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_APP')"><div class="dc-icon">🧠</div><div class="dc-name">Dr. A. Prem Prakash</div><div class="dc-dept">Neurology</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_RK_GASTRO')"><div class="dc-icon">🫀</div><div class="dc-name">Dr. R. Karthikeyan</div><div class="dc-dept">Gastroenterology</div></div>
+        <div class="doc-card" onclick="selDoc(this,'DR_AAB')"><div class="dc-icon">🧩</div><div class="dc-name">Dr. A. Anand Babu</div><div class="dc-dept">Psychiatry</div></div>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="toStep2()">Next: Upload Case Sheet →</button></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step2" class="step-view" style="display:none">
+    
+
+    <div class="card">
+      <div class="card-hdr">Upload Handwritten Case Sheet Photos <span class="badge">AI Handwriting Recognition</span></div>
+      <div class="alert">📸 Upload photos of handwritten notes for <strong id="selDocLabel">the selected doctor</strong>. Claude AI will read all handwriting and fill the exact format.</div>
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" multiple accept="image/*" onchange="handleFiles(event)">
+        <div class="dz-icon">📄</div>
+        <div class="dz-title">Drop case sheet photos here</div>
+        <div class="dz-sub">or tap to browse from your device</div>
+        <div class="dz-hint">✓ JPG, PNG, HEIC · Multiple pages · Handwriting recognized automatically</div>
+      </div>
+      <div class="img-grid" id="imgGrid"></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">Additional Context <span class="badge badge-opt">Optional</span></div>
+      <div class="field"><label>Extra notes for the AI</label>
+        <textarea id="extraCtx" rows="2" placeholder="e.g. Baby weight was 2.8kg, post-op uneventful, focus on cardiac findings..."></textarea>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-sec" onclick="goSummaryStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="generate()">🪄 Generate Summary</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: PROCESSING -->
+  <div id="step3" class="step-view" style="display:none">
+    <div class="card proc-card">
+      <div class="pulse-logo">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 52 C18 46 16 38 22 34 C26 31 30 33 32 38 L34 44 L42 36 C46 32 52 34 50 40 L44 52 C41 58 36 62 30 62 C25 62 21 58 20 52Z" fill="url(#hg2)" opacity="0.9"/>
+          <rect x="34" y="14" width="12" height="28" rx="4" fill="url(#cg2)"/>
+          <rect x="26" y="22" width="28" height="12" rx="4" fill="url(#cg2)"/>
+          <path d="M18 28 C14 22 10 14 16 10 C20 8 24 12 22 20Z" fill="url(#lg2)" opacity=".85"/>
+          <path d="M26 20 C22 14 20 8 26 6 C30 5 32 10 28 18Z" fill="url(#lg2)" opacity=".7"/>
+          <defs>
+            <linearGradient id="hg2" x1="16" y1="32" x2="52" y2="64" gradientUnits="userSpaceOnUse"><stop stop-color="#9C6DD8"/><stop offset="1" stop-color="#7B4FC8"/></linearGradient>
+            <linearGradient id="cg2" x1="26" y1="14" x2="54" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#E91E8C"/><stop offset="1" stop-color="#F06292"/></linearGradient>
+            <linearGradient id="lg2" x1="10" y1="6" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#E91E8C"/><stop offset="1" stop-color="#F06292"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="proc-title">Reading Case Sheet…</div>
+      <div class="proc-sub">Poova Life Desk AI is analyzing documents & recognizing handwriting</div>
+      <div class="prog-list">
+        <div class="prog-item active" id="p1"><div class="prog-dot"></div>Analyzing uploaded images…</div>
+        <div class="prog-item" id="p2"><div class="prog-dot"></div>Reading handwritten notes…</div>
+        <div class="prog-item" id="p3"><div class="prog-dot"></div>Extracting medical information…</div>
+        <div class="prog-item" id="p4"><div class="prog-dot"></div>Filling doctor's exact format…</div>
+        <div class="prog-item" id="p5"><div class="prog-dot"></div>Formatting medicines & advice…</div>
+      </div>
+    </div>
+
+
+    </div>
+
+  <!-- STEP 4: SUMMARY -->
+  <div id="step4" class="step-view" style="display:none">
+    <div class="card">
+      <div class="sum-hdr">
+        <div class="sum-meta">
+          <h2 id="sumName">Patient Name</h2>
+          <div class="meta-row">
+            <span class="meta-chip">📋 MRD: <span id="sumMrd"></span></span>
+            <span class="meta-chip">🏥 IP: <span id="sumIp"></span></span>
+            <span class="meta-chip">📅 D/C: <span id="sumDod"></span></span>
+            <span class="meta-chip"><span class="dept-badge" id="sumDept"></span></span>
+          </div>
+        </div>
+        <div class="sum-actions">
+          <button class="btn btn-sec" onclick="copyAll()">📋 Copy</button>
+          <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+        </div>
+      </div>
+      <div id="sumContent"></div>
+      <div class="btn-row">
+        <button class="btn btn-sec" onclick="goSummaryStep(2)">← Regenerate</button>
+        <button class="btn btn-primary" onclick="resetSummary()">+ New Patient</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ DEPARTMENTS ════ -->
+<div class="view" id="view-departments">
+  <div class="page-hdr"><div class="page-title">Departments</div></div>
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon f2">🤱</div><div class="feat-name">OB/GYN</div><div class="feat-desc">Dr. S. Chithra · 3 Formats</div></div>
+    <div class="feat-card"><div class="feat-icon f1">👶</div><div class="feat-name">Paediatrics & Neonatology</div><div class="feat-desc">Dr. A.S. Kumar · 2 Formats</div></div>
+    <div class="feat-card"><div class="feat-icon f4">🦴</div><div class="feat-name">Orthopaedic Surgery</div><div class="feat-desc">Dr. Mohanasundaram, Dr. Premnath</div></div>
+    <div class="feat-card"><div class="feat-icon f2">❤️</div><div class="feat-name">Cardiology</div><div class="feat-desc">Dr. A. Rajaram Prasad</div></div>
+    <div class="feat-card"><div class="feat-icon f5">🫁</div><div class="feat-name">Pulmonology</div><div class="feat-desc">Dr. J. Ram</div></div>
+    <div class="feat-card"><div class="feat-icon f3">🩺</div><div class="feat-name">General Medicine</div><div class="feat-desc">Dr. V.G. Arun</div></div>
+    <div class="feat-card"><div class="feat-icon f1">🧠</div><div class="feat-name">Neurology & Neurosurgery</div><div class="feat-desc">Dr. A. Prem Prakash</div></div>
+    <div class="feat-card"><div class="feat-icon f4">🫀</div><div class="feat-name">Gastroenterology</div><div class="feat-desc">Dr. R. Karthikeyan</div></div>
+    <div class="feat-card"><div class="feat-icon f6">🧩</div><div class="feat-name">Psychiatry</div><div class="feat-desc">Dr. A. Anand Babu</div></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ REPORTS ════ -->
+<div class="view" id="view-reports">
+  <div class="page-hdr"><div class="page-title">Reports & Analytics</div></div>
+  <div class="reports-grid">
+    <div class="report-card">
+      <div class="rc-title">📊 Summaries by Department</div>
+      <div class="bar-row"><div class="bar-label">OB/GYN</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#E91E8C,#F06292)"></div></div><div class="bar-val">0</div></div>
+      <div class="bar-row"><div class="bar-label">Cardiology</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#6B3FA0,#9C6DD8)"></div></div><div class="bar-val">0</div></div>
+      <div class="bar-row"><div class="bar-label">Orthopedics</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#FF9800,#FFB74D)"></div></div><div class="bar-val">0</div></div>
+      <div class="bar-row"><div class="bar-label">Paediatrics</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#4CAF50,#81C784)"></div></div><div class="bar-val">0</div></div>
+      <div class="bar-row"><div class="bar-label">Gen Medicine</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#2196F3,#64B5F6)"></div></div><div class="bar-val">0</div></div>
+      <div class="bar-row"><div class="bar-label">Pulmonology</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#009688,#4DB6AC)"></div></div><div class="bar-val">0</div></div>
+    </div>
+    <div class="report-card">
+      <div class="rc-title">📅 Monthly Summary Count</div>
+      <div class="bar-row"><div class="bar-label">January</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#6B3FA0,#E91E8C)"></div></div><div class="bar-val">0</div></div>
+      <div class="bar-row"><div class="bar-label">February</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#6B3FA0,#E91E8C)"></div></div><div class="bar-val">0</div></div>
+      <div class="bar-row"><div class="bar-label">March</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#6B3FA0,#E91E8C)"></div></div><div class="bar-val">0</div></div>
+      <div class="bar-row"><div class="bar-label">April</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#6B3FA0,#E91E8C)"></div></div><div class="bar-val">0</div></div>
+      <div class="bar-row"><div class="bar-label">May</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:linear-gradient(90deg,#E91E8C,#F06292)"></div></div><div class="bar-val">0</div></div>
+    </div>
+    <div class="report-card" style="grid-column:1/-1">
+      <div class="rc-title">📋 Summary Status Overview</div>
+      <div style="display:flex;gap:2rem;align-items:center;padding:.5rem 0">
+        <div style="text-align:center"><div style="font-size:2rem;font-weight:800;color:#4CAF50" id="repCompleted">0</div><div style="font-size:.75rem;color:var(--muted);font-weight:700">Completed</div></div>
+        <div style="text-align:center"><div style="font-size:2rem;font-weight:800;color:#FF9800" id="repPending">0</div><div style="font-size:.75rem;color:var(--muted);font-weight:700">Pending</div></div>
+        <div style="text-align:center"><div style="font-size:2rem;font-weight:800;color:var(--purple)" id="repTotal">0</div><div style="font-size:.75rem;color:var(--muted);font-weight:700">Total Patients</div></div>
+        <div style="text-align:center"><div style="font-size:2rem;font-weight:800;color:var(--pink)">13</div><div style="font-size:.75rem;color:var(--muted);font-weight:700">Doctors</div></div>
+        <div style="text-align:center"><div style="font-size:2rem;font-weight:800;color:#2196F3">9</div><div style="font-size:.75rem;color:var(--muted);font-weight:700">Departments</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ USERS ════ -->
+<div class="view" id="view-users">
+  <div class="page-hdr"><div class="page-title">Users</div><button class="btn btn-primary">+ Add User</button></div>
+  <div class="recent-table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dr. S. Chithra</strong></td><td>Consultant</td><td><span class="dept-chip">OB/GYN</span></td><td><span class="status-pill sp-completed">Active</span></td></tr>
+        <tr><td><strong>Dr. A.S. Kumar</strong></td><td>Consultant</td><td><span class="dept-chip">Paediatrics</span></td><td><span class="status-pill sp-completed">Active</span></td></tr>
+        <tr><td><strong>Dr. A. Rajaram Prasad</strong></td><td>Consultant</td><td><span class="dept-chip">Cardiology</span></td><td><span class="status-pill sp-completed">Active</span></td></tr>
+        <tr><td><strong>Dr. G. Premnath</strong></td><td>Consultant</td><td><span class="dept-chip">Orthopedics</span></td><td><span class="status-pill sp-completed">Active</span></td></tr>
+        <tr><td><strong>Dr. V.G. Arun</strong></td><td>Consultant</td><td><span class="dept-chip">Gen Medicine</span></td><td><span class="status-pill sp-completed">Active</span></td></tr>
+        <tr><td><strong>Admin User</strong></td><td>Administrator</td><td><span class="dept-chip">All</span></td><td><span class="status-pill sp-completed">Active</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ SETTINGS ════ -->
+<div class="view" id="view-settings">
+  <div class="page-hdr"><div class="page-title">Settings</div></div>
+  <div class="settings-grid">
+    <div class="setting-card">
+      <div class="sc-title">🔔 Notifications</div>
+      <div class="toggle-row"><div><div class="tr-label">Summary Completed Alert</div><div class="tr-sub">Notify when AI finishes generation</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="tr-label">Pending Reminders</div><div class="tr-sub">Daily reminder for pending summaries</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="tr-label">New Patient Alert</div><div class="tr-sub">Alert when new patient is added</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+    </div>
+    <div class="setting-card">
+      <div class="sc-title">🛡️ Security & Compliance</div>
+      <div class="toggle-row"><div><div class="tr-label">HIPAA Compliance Mode</div><div class="tr-sub">Enable strict data handling</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="tr-label">Auto Logout (30 min)</div><div class="tr-sub">Logout after inactivity</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="tr-label">Audit Log</div><div class="tr-sub">Track all user actions</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+    </div>
+    <div class="setting-card">
+      <div class="sc-title">🖨️ Print & Export</div>
+      <div class="toggle-row"><div><div class="tr-label">Auto Print Header</div><div class="tr-sub">Add hospital name to printouts</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="tr-label">Include Doctor Signature</div><div class="tr-sub">Add doctor name at bottom</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="tr-label">PDF Export</div><div class="tr-sub">Enable save as PDF</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+    </div>
+    <div class="setting-card">
+      <div class="sc-title">🪄 AI Settings</div>
+      <div class="toggle-row"><div><div class="tr-label">Handwriting Recognition</div><div class="tr-sub">Auto-read uploaded images</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="tr-label">Auto-fill Defaults</div><div class="tr-sub">Pre-fill standard values</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="tr-label">Smart Suggestions</div><div class="tr-sub">AI-powered medicine suggestions</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DOCTOR CONFIGS (same format prompts as before) ───────────────────────────
+const DOCTORS = {
+  DR_CHITHRA_LSCS:{name:'Dr. S. Chithra, MD., (OG).',dept:'DEPARTMENT OF OBSTETRICS & GYNAECOLOGY',label:'Dr. Chithra – OB/GYN LSCS',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Extract ALL info from case sheet images and fill this exact JSON for Dr. S. Chithra LSCS format. Return ONLY JSON, no markdown:\n{"provisional_diagnosis":"","final_diagnosis":"","procedure":"","obs_code":"","lmp":"","edd":"","ga":"","menstrual_history":"","marital_history":"","obstetric_history":"","trimester_1":"","trimester_2":"","trimester_3":"","on_examination":"","vitals_admission":{"pr":"","temp":"","rr":"","spo2":"","bp":"","grbs":"","cvs":"","rs":"","pa":"","ps":"","pv":""},"investigations":"","course_in_hospital":"","procedure_done":"","indication":"","intra_op":{"liquor":"","placenta_membranes":"","cord":"","lower_segment":""},"baby_details":{"dob":"","tob":"","sex":"","birth_weight":"","apgar":""},"post_operative":"","condition_on_discharge":{"general":"","pr":"","temp":"","rr":"","spo2":"","bp":"","cvs":"","rs":"","pa":"","pv":"","le":""},"advice_on_discharge":"","medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"review_after":""}`},
+  DR_CHITHRA_ECTOPIC:{name:'Dr. S. Chithra, MD., (OG).',dept:'DEPT. OF OBSTETRICS & GYNAECOLOGY',label:'Dr. Chithra – Ectopic',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill OB/GYN Ectopic summary for Dr. Chithra. Return ONLY JSON:\n{"provisional_diagnosis":"","final_diagnosis":"","procedure":"","obs_code":"","lmp":"","menstrual_history":"","obstetric_history":"","past_history":"","on_examination":"","vitals":{"pr":"","temp":"","rr":"","spo2":"","bp":"","grbs":"","cvs":"","rs":"","pa":"","ps":"","pv":""},"investigations":"","sars_cov2":"","usg_abdomen_pelvis":"","course_in_hospital":"","condition_on_discharge":{"general":"","pr":"","temp":"","rr":"","spo2":"","bp":"","cvs":"","rs":"","pa":"","le":""},"advice_on_discharge":"","medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"review_after":""}`},
+  DR_CHITHRA_NEW:{name:'Dr. S. Chithra, MD., (OG).',dept:'DEPT. OF OBSTETRICS & GYNAECOLOGY',label:'Dr. Chithra – OB/GYN',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill OB/GYN summary for Dr. Chithra general format. Return ONLY JSON:\n{"provisional_diagnosis":"","final_diagnosis":"","procedure":"","obs_code":"","lmp":"","edd":"","ga":"","menstrual_history":"","obstetric_history":"","past_history":"","on_examination":"","vitals_admission":{"pr":"","temp":"","rr":"","spo2":"","bp":"","grbs":"","cvs":"","rs":"","pa":"","ps":"","pv":"","fhr":""},"investigations":"","course_in_hospital":"","procedure_done":"","intra_op":{"liquor":"","placenta_membranes":"","cord":"","lower_segment":""},"baby_details":{"dob":"","tob":"","sex":"","birth_weight":"","apgar":""},"post_operative":"","condition_on_discharge":{"general":"","pr":"","temp":"","rr":"","spo2":"","bp":"","cvs":"","rs":"","pa":"","pv":"","le":""},"advice_on_discharge":"","medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"review_after":""}`},
+  DR_ASK_PAED:{name:'DR. A. S.KUMAR.MD., DNB., FNIC.,',dept:'DEPARTMENT OF PAEDIATRICS & NEONATOLOGY',label:'Dr. A.S. Kumar – Paediatrics',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill Paediatrics summary for Dr. A.S. Kumar. Return ONLY JSON:\n{"diagnosis":"","case_history":"","on_examination":{"general":"","temp":"","hr":"","rr":"","nibp":"","spo2":"","cvs":"","rs":"","pa":"","cns":"","weight":""},"investigations":{"urine_cs":"","bactec_blood_cs":"","peripheral_smear":"","other":""},"course_in_hospital":"","condition_on_discharge":{"activity":"Normal","vitals":"Stable","system":"NAD"},"medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","days":""}],"review_after":""}`},
+  DR_ASK_NEWBORN:{name:'Dr. A.S. Kumar.MD., DNB., FNIC.,',dept:'DEPT. OF PAEDIATRICS & NEONATOLOGY',label:'Dr. A.S. Kumar – New Born',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill New Born Baby summary. Return ONLY JSON:\n{"diagnosis":"","anthropometry":{"admission_weight":"","discharge_weight":"","admission_hc":"","discharge_hc":"","admission_length":"","discharge_length":""},"antenatal_history":{"maternal_age":"","blood_group":"","obstetric_code":"","lmp":"","hiv":"Non-Reactive","hbsag":"Non-Reactive","vdrl":"Non-Reactive","rbs":"Normal","bp":"","hb":"","tsh":""},"antenatal_usg":{"gestational_age":"","liquor_afi":"","efw":""},"birth_details":{"dob":"","mode_of_delivery":"","birth_weight":"","apgar_1min":"","apgar_5min":""},"general_examination":{"colour":"","activity":"","hr":"","spo2":"","nibp":""},"investigations":{"blood_group_rh":"","usg_abdomen":"","usg_cranium":"","echocardiogram":""},"course_in_hospital":"","medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"follow_up":""}`},
+  DR_KMS:{name:'Dr.K.Mohanasundaram, MS.,Mch.,(Ortho).,',dept:'DEPT. OF ORTHO TRAUMA / ORTHOPAEDIC SURGERY',label:'Dr. K. Mohanasundaram – TKR',emergency:'9597084780, 9597084785',prompt:`Fill Ortho TKR summary for Dr. K. Mohanasundaram. Return ONLY JSON:\n{"diagnosis":"","procedure":"Total knee replacement","history_presenting_complaints":"","past_history":"","examination_findings":{"pr":"72/min","bp":"110/70 mmHg","rr":"24/MIN","spo2":"100% on RA","temp":"98.2°F","cvs":"S1S2(+)","rs":"B/L AE(+)","pa":"Soft","cns":"15/15, B/L PERL(+)"},"local_examination":{"right_varus":"","left_varus":"","right_ffd":"","left_ffd":"","right_rom":"","left_rom":""},"treatment_consideration":"","operation_notes":{"surgery":"","anaesthetist":""},"post_op":"Regular dressing done. Regular physiotherapy given.","condition_on_discharge":"Patient conscious oriented, afebrile, vitals stable. Wound clean, dressing done.","advice_on_discharge":"Physiotherapy - Walk with support. Knee pending Exercise.","medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"own_medications":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}]}`},
+  DR_PREMNATH:{name:'Dr. G. Premnath., MS.,(Ortho).,',dept:'DEPT. OF ORTHO TRAUMA / ORTHOPAEDIC SURGERY',label:'Dr. G. Premnath – Ortho',emergency:'9597084780, 9597084785',prompt:`Fill Ortho Surgery summary for Dr. G. Premnath. Return ONLY JSON:\n{"diagnosis":"","procedure_done":"","history_presenting_complaints":"","examination_findings":{"bp":"","spo2":"","pr":"","rr":"","temp":"","cvs":"S1S2 heard","rs":"NVBS heard","pa":"Soft, NAD.","rbs":""},"local_examination":"","treatment_consideration":"","operation_notes":{"surgery":"","details":""},"post_operative":"Uneventful","treatment_given":"Patient treated with antibiotics, antipyretics, sedatives, antiedema, calcium supplements, antacids and other supportive drugs.","condition_on_discharge":"Patient conscious oriented, vitals stable. No DNVD","medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"review_after":"3 days in Orthopedician OPD"}`},
+  DR_RRP:{name:'Dr. A. Rajaram Prasad MD.,DM.,(Cardio)',dept:'DEPARTMENT OF CARDIOLOGY',label:'Dr. Rajaram Prasad – Cardiology',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill Cardiology summary for Dr. A. Rajaram Prasad. Return ONLY JSON:\n{"diagnosis":"","plan":"Medical management","history_presenting_complaints":"","past_history":"","examination_findings":{"hr":"","bp":"","rr":"","spo2":"","temp":"","cvs":"S1S2(+)","rs":"B/L AE(+)","pa":"Soft","cns":"GCS-15/15","grbs":""},"investigations":{"echocardiogram":"","usg_abdomen":"","coronary_angiogram":"","coronary_angioplasty":"","ecg_findings":""},"course_in_hospital":"","condition_on_discharge":{"pr":"","rr":"","cvs":"S1S2(+)","pa":"Soft","bp":"","spo2":"","rs":"B/L AE(+)","cns":"GCS-15/15"},"medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"review_after":"Cardiac OPD with Urea, Creatinine, Sodium, Potassium, CBC & ECG"}`},
+  DR_RAM:{name:'Dr. J. Ram, MD, DTCD., (Chest)',dept:'DEPARTMENT OF PULMONOLOGY',label:'Dr. J. Ram – Pulmonology',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill Pulmonology summary for Dr. J. Ram. Return ONLY JSON:\n{"diagnosis":"","history_presenting_complaints":"","past_history":"Not a K/C/O Type-II DM/ SHTN/ CAD/ CKD/ Epilepsy/ Thyroid Disorder","examination_findings":{"temp":"","pr":"","rr":"","bp":"","spo2":"","cvs":"S1S2(+).","rs":"B/L AE(+). Wheeze(+)","pa":"Soft,","cns":"15/15,"},"course_in_hospital":"","pleural_aspiration":"","condition_on_discharge":{"temp":"","pr":"","rr":"","bp":"","spo2":"","cvs":"S1S2(+).","rs":"B/L AE(+). Wheeze(↓)","pa":"Soft","cns":"GCS-15/15"},"medicines":[{"name":"BUDECORT RESPULE WITH NEBULIZER","morning":"1","noon":"1","evening":"0","night":"1","sos_days":""},{"name":"DUOLIN RESPULE WITH NEBULIZER","morning":"1","noon":"1","evening":"1","night":"1","sos_days":""},{"name":"NEBZMART-G RESPULE WITH NEBULIZER","morning":"1","noon":"0","evening":"0","night":"1","sos_days":""}],"review_after":"Pulmonologist OPD"}`},
+  DR_ARUN:{name:'Dr. V.G. Arun MD., (General Physician)',dept:'DEPARTMENT OF GENERAL MEDICINE',label:'Dr. V.G. Arun – General Medicine',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill General Medicine summary for Dr. V.G. Arun. Return ONLY JSON:\n{"diagnosis":"","history_presenting_complaints":"","past_history":"Not a K/C/O Type-II DM/ SHTN/ CAD/ CKD/ Epilepsy/ Thyroid Disorder","examination_findings":{"temp":"","pr":"","rr":"","bp":"","spo2":"","cvs":"S1S2(+)","rs":"B/L AE(+)","pa":"Soft","cns":"GCS-15/15","grbs":""},"investigations":"Enclosed","course_in_hospital":"Patient was admitted in ward with above mentioned complaints. Relevant investigations done. Patient was treated with IV fluids, antibiotics and other supportive measures.","condition_on_discharge":{"temp":"","pr":"","rr":"","bp":"","spo2":"","cvs":"S1S2(+)","rs":"B/L AE(+)","pa":"Soft","cns":"GCS-15/15","grbs":""},"medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"review_after":"General Medicine OPD"}`},
+  DR_APP:{name:'A. Prem Prakash, MS, M. Ch.,',dept:'DEPARTMENT OF NEUROLOGY AND NEUROSURGERY',label:'Dr. A. Prem Prakash – Neurosurgery',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill Neurology summary for Dr. A. Prem Prakash. Return ONLY JSON:\n{"diagnosis":"","history_presenting_complaints":"","past_history":"K/C/O DM / SHT /BA / CVA / CKD /IHD.","examination_findings":{"bp":"","rr":"","spo2":"","cvs":"S1S2(+).","pa":"Soft,","pr":"","temp":"","grbs":"","rs":"B/L AE(+).","cns":"15/15,"},"investigations":"Enclosed","course_in_hospital":"","condition_on_discharge":{"bp":"","rr":"","spo2":"","cvs":"S1S2(+).","pa":"Soft,","pr":"","temp":"","rs":"B/L AE(+).","cns":"15/15"},"medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","days":""}],"review_after":"days in neurosurgeon OPD"}`},
+  DR_RK_GASTRO:{name:'Dr.R. Karthikeyan MD.DM.,(Gastro)',dept:'DEPARTMENT OF GASTROENTEROLOGY',label:'Dr. R. Karthikeyan – Gastroenterology',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill Gastroenterology summary for Dr. R. Karthikeyan. Return ONLY JSON:\n{"diagnosis":"","presenting_complaints":"","past_history":"","on_examination":{"temp":"","pr":"","rr":"","bp":"","spo2":"","cvs":"S1S2(+)","rs":"BAE(+),","pa":"Soft, tenderness(+) in epigastric & right hypochondrium local guarding(+)","cns":"GCS 15/15"},"investigations":{"usg_abdomen":""},"course_in_hospital":"Patient brought with above mentioned history and was admitted in ward. Relevant investigations done. Treated with IV Fluids, antibiotics, and other supportive measures. Patient's condition improved. Hence discharged.","condition_on_discharge":{"temp":"","pr":"","rr":"","bp":"","spo2":"","cvs":"S1S2(+)","rs":"BAE(+),","pa":"","cns":"GCS 15/15"},"medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"review_after":"Gastroenterologist OPD with reports"}`},
+  DR_AAB:{name:'Dr. A. Anand babu MD.,(Psy)',dept:'DEPARTMENT OF PSYCHIATRY',label:'Dr. A. Anand Babu – Psychiatry',emergency:'0427-2319395 / 2319396, 95970-84780 / 95970-84785',prompt:`Fill Psychiatry summary for Dr. A. Anand Babu. Return ONLY JSON:\n{"diagnosis":"","presenting_complaints":"","past_history":"","on_examination":{"pma":"Normal","temp":"","pr":"","rr":"","bp":"","spo2":"","cvs":"S1S2(+)","rs":"BAE(+)","pa":"Soft,","cns":"GCS 15/15 B/L PERL."},"investigations":"Reports Enclosed","course_in_hospital":"The patient was admitted in ward under a psychiatrist with above mentioned complaints. Relevant investigation done. Patient was started with antipsychotics, antidepressants, IV benzodiazepins, nerve rejuvenation and other supportive measures were taken. Following which the patient was psychologically and physically stable. Counselling was done. Hence planned for discharge.","condition_on_discharge":{"general":"O/E – Conscious, Oriented to time/ place / person","pma":"Normal","speech":"Normal Tone / Tempo / Volume / Quantum","mood":"Normal","perceptual":"Currently No Perceptual disturbances"},"medicines":[{"name":"","morning":"","noon":"","evening":"","night":"","sos_days":""}],"review_after":"Psychiatry OPD"}`}
+};
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let selDocKey='DR_CHITHRA_LSCS';
+let uploadedImgs=[];
+let summaryStep=1;
+
+// ─── VIEW SWITCHING ───────────────────────────────────────────────────────────
+function switchView(name, btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name)?.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active-tab'));
+  if(btn) btn.classList.add('active-tab');
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  const match=document.querySelector(`.sb-item[onclick*="${name}"]`);
+  if(match) match.classList.add('active');
+}
+function setSbActive(el){
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── DOCTOR SELECTION ─────────────────────────────────────────────────────────
+function selDoc(el,key){
+  document.querySelectorAll('.doc-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  selDocKey=key;
+}
+
+// ─── SUMMARY STEPS ────────────────────────────────────────────────────────────
+function goSummaryStep(n){
+  summaryStep=n;
+  [1,2,3,4].forEach(i=>{
+    const sv=document.getElementById('step'+i);
+    if(sv) sv.style.display=(i===n)?'block':'none';
+    const si=document.getElementById('s'+i);
+    if(si){si.classList.remove('active','done');if(i<n)si.classList.add('done');if(i===n)si.classList.add('active')}
+  });
+}
+function toStep2(){
+  if(!document.getElementById('pName').value.trim()){showToast('Please enter patient name');return}
+  document.getElementById('selDocLabel').textContent=DOCTORS[selDocKey].label;
+  goSummaryStep(2);
+}
+function resetSummary(){
+  uploadedImgs=[];
+  document.getElementById('imgGrid').innerHTML='';
+  document.getElementById('fileInput').value='';
+  ['pName','pMrd','pIp','pAge','pRoom','pAddr','pRef','extraCtx'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  const ps=document.getElementById('pSex');if(ps)ps.selectedIndex=0;
+  ['pDoa','pDos','pDod'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  document.getElementById('sumContent').innerHTML='';
+  goSummaryStep(1);
+}
+function openPatientSummary(name,age,mrd,dept){
+  switchView('summaries',null);
+  document.getElementById('pName').value=name;
+  document.getElementById('pMrd').value=mrd;
+  goSummaryStep(1);
+  showToast('Patient loaded: '+name);
+}
+
+// ─── FILE UPLOAD ──────────────────────────────────────────────────────────────
+const dz=document.getElementById('dropZone');
+dz?.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+dz?.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz?.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');handleFileList(e.dataTransfer.files)});
+function handleFiles(e){handleFileList(e.target.files)}
+function handleFileList(files){
+  Array.from(files).forEach(f=>{
+    if(!f.type.startsWith('image/'))return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      uploadedImgs.push({file:f,b64:ev.target.result.split(',')[1],dataUrl:ev.target.result,mime:f.type||'image/jpeg'});
+      renderThumbs();
+    };
+    r.readAsDataURL(f);
+  });
+}
+function renderThumbs(){
+  const g=document.getElementById('imgGrid');
+  if(!g)return;
+  g.innerHTML=uploadedImgs.map((img,i)=>`
+    <div class="img-thumb">
+      <img src="${img.dataUrl}" alt="pg${i+1}">
+      <button class="rm-btn" onclick="removeImg(${i})">✕</button>
+      <div class="pg-lbl">Page ${i+1}</div>
+    </div>`).join('');
+}
+function removeImg(i){uploadedImgs.splice(i,1);renderThumbs()}
+
+// ─── GENERATE ─────────────────────────────────────────────────────────────────────────────────
+const _AK = atob('c2stYW50LWFwaTAzLUdwYURWb0lVZnNkTWNkcUk5WmpFOTRUS2JMSktMUnV0ZmZsamNlNGVXaUZqUF9Zd09LdzNEekFPdWFrRThtMGhfenJpLVNhdVV3QlFTWFRWdW85cjhnLUtwN3NvUUFB');
+
+async function generate() {
+  if (!uploadedImgs.length) { showToast('⚠ Please upload at least one case sheet image'); return; }
+  goSummaryStep(3);
+  const doc = DOCTORS[selDocKey];
+  const pids = ['p1','p2','p3','p4','p5'];
+  let pi = 0;
+  const iv = setInterval(() => {
+    if (pi > 0) {
+      document.getElementById(pids[pi-1]).classList.remove('active');
+      document.getElementById(pids[pi-1]).classList.add('done');
+    }
+    if (pi < pids.length) document.getElementById(pids[pi]).classList.add('active');
+    pi++;
+    if (pi >= pids.length) clearInterval(iv);
+  }, 2000);
+  const g = id => document.getElementById(id)?.value || '';
+  const patientCtx =
+    'Patient Name: ' + g('pName') + '\n' +
+    'MRD No: '       + g('pMrd')  + '\n' +
+    'IP No: '        + g('pIp')   + '\n' +
+    'Age: '          + g('pAge')  + '\n' +
+    'Sex: '          + g('pSex')  + '\n' +
+    'Room No: '      + g('pRoom') + '\n' +
+    'D.O.A: '        + g('pDoa')  + '\n' +
+    'D.O.S: '        + g('pDos')  + '\n' +
+    'D.O.D: '        + g('pDod')  + '\n' +
+    'Address: '      + g('pAddr') + '\n' +
+    'Ref Doctor: '   + g('pRef')  + '\n' +
+    'Extra notes: '  + g('extraCtx');
+  const fullPrompt =
+    doc.prompt + '\n\n' +
+    'PATIENT DETAILS:\n' + patientCtx + '\n\n' +
+    'Read ALL handwriting carefully from the attached case sheet images. ' +
+    'Extract every medical detail. Return ONLY valid JSON. No markdown. No explanation.';
+  const imgParts = uploadedImgs.map(img => ({
+    type: 'image',
+    source: { type: 'base64', media_type: img.mime, data: img.b64 }
+  }));
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': _AK,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: [...imgParts, { type: 'text', text: fullPrompt }] }]
+      })
+    });
+    clearInterval(iv);
+    pids.forEach(id => {
+      document.getElementById(id).classList.remove('active');
+      document.getElementById(id).classList.add('done');
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      showToast('⚠ Error: ' + (err?.error?.message || 'HTTP ' + resp.status));
+      goSummaryStep(2); return;
+    }
+    const data = await resp.json();
+    if (data.error) { showToast('⚠ ' + data.error.message); goSummaryStep(2); return; }
+    const raw = data?.content?.find(b => b.type === 'text')?.text || '{}';
+    let parsed = {};
+    try {
+      const clean = raw.replace(/```json|```/g, '').trim();
+      const s = clean.indexOf('{'), e = clean.lastIndexOf('}');
+      parsed = JSON.parse(clean.substring(s, e + 1));
+    } catch (e) { parsed = { raw_text: raw }; }
+    renderSummary(parsed);
+  } catch (e) {
+    clearInterval(iv);
+    showToast('⚠ Network error: ' + e.message);
+    goSummaryStep(2);
+  }
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function renderSummary(data){
+  const doc=DOCTORS[selDocKey];
+  const g=(id)=>document.getElementById(id)?.value||'';
+  const p={name:g('pName'),mrd:g('pMrd'),ip:g('pIp'),age:g('pAge'),sex:g('pSex'),room:g('pRoom'),doa:g('pDoa'),dos:g('pDos'),dod:g('pDod'),addr:g('pAddr'),ref:g('pRef')};
+  document.getElementById('sumName').textContent=p.name||'Patient';
+  document.getElementById('sumMrd').textContent=p.mrd||'N/A';
+  document.getElementById('sumIp').textContent=p.ip||'N/A';
+  document.getElementById('sumDod').textContent=p.dod||'N/A';
+  document.getElementById('sumDept').textContent=doc.label;
+
+  const nl=v=>v||'—';
+  const vfmt=(v={})=>Object.entries(v).filter(([,val])=>val).map(([k,val])=>`${k.toUpperCase().replace(/_/g,' ')}: ${val}`).join('  |  ');
+  const meds=(arr)=>(!arr||!arr.length)?'No medicines specified':arr.filter(m=>m.name).map(m=>`• ${m.name} — M:${m.morning||'-'} N:${m.noon||'-'} E:${m.evening||'-'} Nt:${m.night||'-'}${m.sos_days?' SOS:'+m.sos_days:''}`).join('\n');
+  const hdr=[{title:'DEPARTMENT & PATIENT DETAILS',color:'#2D1B69',content:`${doc.dept}\n\nNAME: ${p.name}  MRD.NO: ${p.mrd}  IP.NO: ${p.ip}\nAGE: ${p.age}  SEX: ${p.sex}  ROOM.NO: ${p.room}\nADDRESS: ${p.addr}\nD.O.A: ${p.doa}  D.O.S: ${p.dos}  D.O.D: ${p.dod}\nCONSULTANT: ${doc.name}${p.ref?'\nREF. DOCTOR: '+p.ref:''}`}];
+
+  let sections=hdr;
+  const d=data;
+  if(selDocKey.startsWith('DR_CHITHRA')){
+    sections=[...hdr,
+      {title:'DIAGNOSIS & PROCEDURE',color:'#c0392b',content:`Provisional: ${nl(d.provisional_diagnosis)}\nFinal: ${nl(d.final_diagnosis)}\nProcedure: ${nl(d.procedure)}`},
+      {title:'OBSTETRIC CODE / MENSTRUAL HISTORY',color:'#7a5ce0',content:`Obs Code: ${nl(d.obs_code)}  LMP: ${nl(d.lmp)}  EDD: ${nl(d.edd||'')}  GA: ${nl(d.ga||'')}\nMenstrual: ${nl(d.menstrual_history)}\nMarital: ${nl(d.marital_history||'')}`},
+      {title:'OBSTETRIC HISTORY',color:'#7a5ce0',content:nl(d.obstetric_history)},
+      {title:'ANTENATAL CARE – TRIMESTERS',color:'#7a5ce0',content:`1st: ${nl(d.trimester_1||'')}\n2nd: ${nl(d.trimester_2||'')}\n3rd: ${nl(d.trimester_3||'')}`},
+      {title:'ON EXAMINATION / VITALS',color:'#246b47',content:vfmt(d.vitals_admission||d.vitals||{})},
+      {title:'INVESTIGATIONS',color:'#0e7c7e',content:nl(d.investigations)},
+      {title:'COURSE IN HOSPITAL',color:'#0e7c7e',content:nl(d.course_in_hospital)},
+      ...(selDocKey!=='DR_CHITHRA_ECTOPIC'?[
+        {title:'PROCEDURE / INTRA-OP FINDINGS',color:'#E91E8C',content:`Procedure: ${nl(d.procedure_done)}\nIndication: ${nl(d.indication||'Previous LSCS / CPD')}\nLiquor: ${nl(d.intra_op?.liquor)}\nPlacenta: ${nl(d.intra_op?.placenta_membranes)}\nCord: ${nl(d.intra_op?.cord)}\nLower Segment: ${nl(d.intra_op?.lower_segment)}`},
+        {title:'BABY DETAILS',color:'#246b47',content:`DOB: ${nl(d.baby_details?.dob)}  Time: ${nl(d.baby_details?.tob)}\nSex: ${nl(d.baby_details?.sex)}  Birth Weight: ${nl(d.baby_details?.birth_weight)}\nApgar: ${nl(d.baby_details?.apgar)}`},
+      ]:[]),
+      {title:'POST OPERATIVE PERIOD',color:'#246b47',content:nl(d.post_operative)},
+      {title:'CONDITION ON DISCHARGE',color:'#6B3FA0',content:vfmt(d.condition_on_discharge)},
+      {title:'ADVICE ON DISCHARGE',color:'#6B3FA0',content:nl(d.advice_on_discharge)},
+      {title:'MEDICINES',color:'#E91E8C',content:meds(d.medicines)},
+      {title:'REVIEW / AFTER',color:'#6B3FA0',content:`• Review after ${nl(d.review_after)} in OG OPD.\n• Repeat blood sugar (FBS/PPBS) after 15 days.\n• Daily BP monitoring.`},
+      {title:'DOCTOR & EMERGENCY',color:'#2D1B69',content:`${doc.name}\nEmergency: ${doc.emergency}`},
+    ];
+  } else {
+    // Generic builder for all other doctors
+    sections=[...hdr,
+      ...(d.diagnosis?[{title:'DIAGNOSIS',color:'#c0392b',content:nl(d.diagnosis)}]:[]),
+      ...(d.presenting_complaints||d.history_presenting_complaints?[{title:'HISTORY & PRESENTING COMPLAINTS',color:'#6B3FA0',content:nl(d.presenting_complaints||d.history_presenting_complaints)}]:[]),
+      ...(d.past_history?[{title:'PAST HISTORY',color:'#6B3FA0',content:nl(d.past_history)}]:[]),
+      ...(d.procedure||d.procedure_done?[{title:'PROCEDURE',color:'#E91E8C',content:nl(d.procedure||d.procedure_done)}]:[]),
+      ...(d.examination_findings||d.on_examination?[{title:'EXAMINATION FINDINGS',color:'#246b47',content:vfmt(d.examination_findings||d.on_examination)}]:[]),
+      ...(d.investigations?[{title:'INVESTIGATIONS',color:'#6B3FA0',content:typeof d.investigations==='string'?nl(d.investigations):vfmt(d.investigations)}]:[]),
+      ...(d.operation_notes?[{title:'OPERATION NOTES',color:'#E91E8C',content:vfmt(d.operation_notes)}]:[]),
+      ...(d.course_in_hospital?[{title:'COURSE IN HOSPITAL',color:'#6B3FA0',content:nl(d.course_in_hospital)}]:[]),
+      ...(d.pleural_aspiration?[{title:'PLEURAL ASPIRATION',color:'#E91E8C',content:nl(d.pleural_aspiration)}]:[]),
+      ...(d.condition_on_discharge?[{title:'CONDITION ON DISCHARGE',color:'#246b47',content:vfmt(d.condition_on_discharge)}]:[]),
+      ...(d.condition_on_discharge?.general?[{title:'MENTAL STATUS ON DISCHARGE (PSYCHIATRY)',color:'#246b47',content:`${d.condition_on_discharge.general||''}\nPMA: ${d.condition_on_discharge.pma||''}\nSpeech: ${d.condition_on_discharge.speech||''}\nMood: ${d.condition_on_discharge.mood||''}\n${d.condition_on_discharge.perceptual||''}`}]:[]),
+      {title:'MEDICINES',color:'#E91E8C',content:meds(d.medicines)},
+      ...(d.own_medications?[{title:'OWN MEDICATION',color:'#E91E8C',content:meds(d.own_medications)}]:[]),
+      {title:'REVIEW / AFTER',color:'#6B3FA0',content:`To review after ${nl(d.review_after)}`},
+      {title:'DOCTOR & EMERGENCY',color:'#2D1B69',content:`${doc.name}\nEmergency: ${doc.emergency}`},
+    ];
+  }
+
+  document.getElementById('sumContent').innerHTML=sections.map(s=>`
+    <div class="sum-section" style="border-left-color:${s.color}">
+      <div class="sum-section-ttl">${s.title}</div>
+      <div class="sum-section-body" contenteditable="true">${escHtml(s.content)}</div>
+      <div class="edit-hint">✏️ click to edit</div>
+    </div>`).join('');
+  goSummaryStep(4);
+  showToast('✓ Summary generated by Poova Life Desk!');
+}
+
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function copyAll(){
+  let t='';
+  document.querySelectorAll('#step4 .sum-section').forEach(s=>{
+    t+=s.querySelector('.sum-section-ttl').textContent+'\n'+s.querySelector('.sum-section-body').textContent+'\n\n';
+  });
+  navigator.clipboard.writeText(t).then(()=>showToast('✓ Copied to clipboard!'));
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show';
+  setTimeout(()=>t.className='toast',3200);
+}
+
+// ─── CLEAR ALL PATIENT FIELDS (start fresh / blank) ──────────────────────────
+function clearPatientFields(){
+  // All text inputs & textareas → empty string
+  ['pName','pMrd','pIp','pAge','pRoom','pAddr','pRef','extraCtx'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.value='';
+  });
+  // Dropdowns → first (blank) option
+  const sex=document.getElementById('pSex');
+  if(sex) sex.selectedIndex=0;
+  // All date fields → empty (no default date)
+  ['pDoa','pDos','pDod'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.value='';
+  });
+  // Clear uploaded images
+  uploadedImgs=[];
+  const grid=document.getElementById('imgGrid');
+  if(grid) grid.innerHTML='';
+  const fi=document.getElementById('fileInput');
+  if(fi) fi.value='';
+  // Clear extra context
+  const ec=document.getElementById('extraCtx');
+  if(ec) ec.value='';
+  // Clear generated summary
+  const sc=document.getElementById('sumContent');
+  if(sc) sc.innerHTML='';
+  // Reset doctor selection to first card
+  selDocKey='DR_CHITHRA_LSCS';
+  document.querySelectorAll('.doc-card').forEach((c,i)=>c.classList.toggle('sel',i===0));
+  // Reset progress dots
+  ['p1','p2','p3','p4','p5'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el){el.classList.remove('active','done');if(i===0)el.classList.add('active');}
+  });
+}
+
+// Override resetSummary to use clearPatientFields
+function resetSummary(){
+  clearPatientFields();
+  goSummaryStep(1);
+  showToast('✓ Ready for new patient');
+}
+
+// ─── INIT: start completely blank ────────────────────────────────────────────
+clearPatientFields();
+goSummaryStep(1);
+</script>
+</body>
+</html>
